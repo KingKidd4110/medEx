@@ -1,0 +1,147 @@
+{% load static tailwind_tags custom_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>MedEx Hospital</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    {% tailwind_css %}
+    <link rel="stylesheet" href="{% static 'adminpanel/css/animate.min.css' %}" />
+    
+    <script src="{% static 'adminpanel/js/jquery-3.6.0.min.js' %}"></script>
+    <style>
+        /* Custom gradient */
+        .neno-gradient {
+            background: linear-gradient(135deg, #e0f2fe 0%, #f0fdfa 50%, #e0e7ff 100%);
+        }
+        /* Smooth section transitions */
+        .section-content {
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+
+{% block content %}
+    {% include 'medEx_app/navbar.html' %}
+{% endblock %}
+
+<body class="font-sans">
+    <!-- Dashboard Header -->
+    <div class="min-h-screen neno-gradient">
+        <div class="container mx-auto px-4 py-8 shadow-lg animate__animated animate__fadeInUp animate__delay-1s">
+            <!-- Title + Buttons -->
+            <div class="flex justify-between items-center mb-8">
+                <h1 class="text-3xl font-bold text-blue-900">Staff Dashboard</h1>
+                {% if request.user|is_admin %}
+                    <button id="assignStaffBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-transform hover:scale-105">
+                        Assign New Staff
+                    </button>
+                {% endif %}
+            </div>
+
+            <!-- Patient Bookings Section -->
+            
+            <section class="mb-12">
+                <h2 class="text-2xl font-semibold text-blue-800 mb-6">Patient Bookings</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Booking Card (Repeat for each booking) -->
+                    {% for booking in bookings %}
+                        <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow" data-booking-id="{{ booking.id }}">
+                            <div class="p-6">
+                                <div class="flex justify-between items-start">
+                                    <h3 class="text-xl font-bold text-blue-700">{{ booking.user }}</h3>
+                                    {% if booking.status == 'pending' %}
+                                        <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">Pending</span>
+                                    {% endif %}
+                                </div>
+                                <p class="mt-1 text-gray-600"><strong>Patient Name:</strong> {{ booking.name }}</p>
+                                <p class="mt-2 text-gray-600"><strong>Contact:</strong> {{ booking.contact }}</p>
+                                <p class="mt-1 text-gray-600"><strong>Visit Date:</strong> {{ booking.visit_date }}</p>
+                                <div class="mt-4">
+                                    <p class="text-gray-700"><strong>Illness:</strong></p>
+                                    <p class="text-gray-600">{{ booking.illness_details }}</p>
+                                    <p class="text-gray-700"><strong>Booked At:</strong></p>
+                                    <p class="text-gray-600">{{ booking.created_at }}</p>
+                                </div>
+                                <div class="mt-4 flex space-x-2">
+                                    {% if booking.status == 'pending' %}
+                                        <button class="approve-btn bg-green-100 text-green-800 px-3 py-1 rounded-md text-sm" data-booking-id="{{ booking.id }}">Approve</button>
+                                        <button class="reject-btn bg-red-100 text-red-800 px-3 py-1 rounded-md text-sm" data-booking-id="{{ booking.id }}">Reject</button>
+                                    {% elif booking.status == 'approved' %}
+                                        <span class="bg-green-100 text-green-800 px-3 py-1 rounded-md text-sm">Approved</span>
+                                    {% elif booking.status == 'rejected' %}
+                                        <span class="bg-red-100 text-red-800 px-3 py-1 rounded-md text-sm">Rejected</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <p class="text-gray-600">No bookings available.</p>
+                    {% endfor %}
+                    
+                </div>
+            </section>
+
+            <!-- Assign Staff Modal (Hidden by Default) -->
+            <div id="assignStaffModal" class="fixed inset-0 z-50 hidden neno-gradient bg-opacity-50 flex items-center justify-center p-4">
+                <div class="bg-white rounded-lg shadow-xl w-full max-w-md">
+                    <div class="flex justify-between items-center border-b p-4">
+                        <h3 class="text-xl font-bold text-blue-800">Assign New Staff</h3>
+                        <button id="closeStaffModal" class="text-gray-500 hover:text-gray-700">
+                            ✕
+                        </button>
+                    </div>
+                    <form id="assignStaffForm" class="p-6 space-y-4">
+                        {% csrf_token %}
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Full Name</label>
+                            <input type="text" name="full_name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Email</label>
+                            <input type="email" name="email" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Role</label>
+                            <select name="role" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border">
+                                <option value="doctor">Doctor</option>
+                                <option value="nurse">Nurse</option>
+                                <option value="receptionist">Receptionist</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+                        <div class="flex justify-end space-x-3 pt-4">
+                            <button type="button" id="cancelStaffAssign" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400">
+                                Cancel
+                            </button>
+                            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                                Assign Staff
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script for Modals -->
+    <script src="{% static 'adminpanel/js/assign.js' %}">
+
+    </script>
+    <script src="{% static 'adminpanel/js/booking_confirmation.js' %}">
+    </script>
+
+    <section id='footer'>
+        {% block footer %}
+            {% include 'medEx_app/footer.html' %}
+        {% endblock %}
+    </section>
+</body>
+</html>

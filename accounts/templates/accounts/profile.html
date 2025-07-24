@@ -1,0 +1,188 @@
+{% load static tailwind_tags custom_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>MedEx Hospital</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    {% tailwind_css %}
+    <link rel="stylesheet" href="{% static 'adminpanel/css/animate.min.css' %}" />
+    
+    <script src="{% static 'adminpanel/js/jquery-3.6.0.min.js' %}"></script>
+    <style>
+        /* Custom gradient */
+        .nano-gradient {
+            background: linear-gradient(135deg, #e0f2fe 0%, #f0fdfa 50%, #e0e7ff 100%);
+        }
+        /* Smooth section transitions */
+        .section-content {
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+
+{% block content %}
+    {% include 'medEx_app/navbar.html' %}
+{% endblock %}
+
+<body>
+
+    <div class="nano-gradient min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto">
+        <!-- Profile Card -->
+        <div class="bg-white rounded-xl shadow-xl overflow-hidden">
+        <!-- Profile Header -->
+        <div class="bg-blue-600 h-32 relative">
+            <!-- Profile Picture -->
+            <div class="absolute -bottom-16 left-6">
+            <div class="h-32 w-32 rounded-full border-4 border-white bg-gray-200 overflow-hidden shadow-lg">
+                {% if user_profile.profile_picture %}
+                <img src="{{ user_profile.profile_picture.url }}" alt="Profile" class="h-full w-full object-cover">
+                {% else %}
+                <div class="h-full w-full bg-blue-100 flex items-center justify-center">
+                    <span class="text-4xl text-blue-800">{{ user.username|first|upper }}</span>
+                </div>
+                {% endif %}
+            </div>
+            </div>
+        </div>
+
+        <!-- Profile Body -->
+        <div class="pt-20 px-6 pb-6">
+            <!-- Name & Role Badge -->
+            <div class="flex justify-between items-start mb-4">
+            <h1 class="text-3xl font-bold text-blue-900">{{ user.get_full_name|default:user.username }}</h1>
+            <span class="px-3 py-1 rounded-full text-sm font-medium 
+                {% if user.is_superuser %}bg-red-100 text-red-800
+                {% elif user.is_staff %}bg-yellow-100 text-yellow-800
+                {% else %}bg-blue-100 text-blue-800{% endif %}">
+                {% if user.is_superuser %}Admin
+                {% elif user.is_staff %}Staff
+                {% else %}Patient{% endif %}
+            </span>
+            </div>
+
+            <!-- Bio -->
+            <div class="mb-6">
+            <h2 class="text-lg font-semibold text-blue-800 mb-2">About</h2>
+            <p class="text-gray-700 whitespace-pre-line">
+                {{ user_profile.bio|default:"No bio yet." }}
+            </p>
+            </div>
+
+            <!-- Details Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div>
+                <h3 class="text-sm font-medium text-gray-500">Contact</h3>
+                <p class="mt-1 text-lg text-blue-800">
+                {{ user_profile.contact|default:"Not provided" }}
+                </p>
+            </div>
+            <div>
+                <h3 class="text-sm font-medium text-gray-500">Member Since</h3>
+                <p class="mt-1 text-lg text-blue-800">
+                {{ user.date_joined|date:"F Y" }}
+                </p>
+            </div>
+            </div>
+
+            <!-- Edit Button -->
+            <button id="editProfileBtn" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg shadow-md transition-transform hover:scale-105">
+            Edit Profile
+            </button>
+        </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div id="editProfileModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+        <div class="flex justify-between items-center border-b p-6 sticky top-0 bg-white z-10">
+        <h3 class="text-xl font-bold text-blue-800">Update Profile</h3>
+        <button id="closeEditModal" class="text-gray-500 hover:text-gray-700 text-2xl">
+            &times;
+        </button>
+        </div>
+        <form method="POST" enctype="multipart/form-data" class="p-6 space-y-6">
+        {% csrf_token %}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- First Name -->
+            <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+            <input type="text" name="first_name" value="{{ user.first_name }}" 
+                    class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-3 border">
+            </div>
+            
+            <!-- Last Name -->
+            <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+            <input type="text" name="last_name" value="{{ user.last_name }}" 
+                    class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-3 border">
+            </div>
+        </div>
+
+        <!-- Profile Picture -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Profile Picture</label>
+            <div class="flex items-center space-x-4">
+            <div class="h-16 w-16 rounded-full overflow-hidden bg-gray-200">
+                {% if user_profile.profile_picture %}
+                <img src="{{ user_profile.profile_picture.url }}" alt="Current" class="h-full w-full object-cover">
+                {% else %}
+                <div class="h-full w-full flex items-center justify-center text-blue-800">
+                    {{ user.username|first|upper }}
+                </div>
+                {% endif %}
+            </div>
+            <input type="file" name="profile_picture" accept="image/jpeg,image/png" 
+                    class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+            </div>
+        </div>
+
+        <!-- Bio -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Bio</label>
+            <textarea name="bio" rows="3" class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-3 border">{{ user_profile.bio }}</textarea>
+        </div>
+
+        <!-- Contact -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Contact Number</label>
+            <input type="tel" name="contact" value="{{ user_profile.contact }}" 
+                class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-3 border">
+        </div>
+
+        <div class="flex justify-end space-x-3 pt-4 border-t">
+            <button type="button" id="cancelEdit" class="px-6 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition">
+            Cancel
+            </button>
+            <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+            Save Changes
+            </button>
+        </div>
+        </form>
+    </div>
+    </div>
+
+    <!-- Script for Modal -->
+    <script src="{% static 'accounts/js/profile.js' %}">
+    // Edit Profile Modal
+    
+    </script>
+
+
+    <section id='footer'>
+        {% block footer %}
+            {% include 'medEx_app/footer.html' %}
+        {% endblock %}
+    </section>
+</body>
+</html>

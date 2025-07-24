@@ -1,0 +1,227 @@
+{% load static tailwind_tags custom_tags %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+    <title>MedEx Hospital</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		{% tailwind_css %}
+		<link rel="stylesheet" href="{% static 'medEx_app/css/animate.min.css' %}" />
+		
+		<script src="{% static 'medEx_app/js/jquery-3.6.0.min.js' %}"></script>
+		
+		<script src="{% static 'medEx_app/js/book.js' %}"></script>
+		<style>
+			/* Custom gradient */
+			.hero-gradient {
+			background: linear-gradient(135deg, #e0f2fe 0%, #f0fdfa 50%, #e0e7ff 100%);
+			}
+			/* Smooth section transitions */
+			.section-content {
+			display: none;
+			animation: fadeIn 0.5s ease-out;
+			}
+			@keyframes fadeIn {
+			from { opacity: 0; transform: translateY(10px); }
+			to { opacity: 1; transform: translateY(0); }
+			}
+  		</style>
+		
+	</head>
+
+	{% block content %}
+
+		{% include './navbar.html' %}
+
+	{% endblock %}
+
+
+	<body class="font-sans hero-gradient">
+  <!-- Your Navbar Here -->
+
+  <!-- Hero Section with Animated Description -->
+		<section class="hero-gradient py-20 px-4">
+			<div class="max-w-4xl mx-auto text-center">
+			<h1 class="text-4xl md:text-5xl font-bold text-blue-900 mb-6 animate__animated animate__fadeInDown">
+				Welcome to <span class="text-blue-600">medEx</span> Hospital
+			</h1>
+			<div class="bg-white bg-opacity-80 rounded-xl p-6 shadow-lg animate__animated animate__fadeInUp animate__delay-1s">
+				<p class="text-gray-700 text-lg md:text-xl leading-relaxed">
+				At <strong>medEx</strong>, we combine cutting-edge technology with compassionate care. 
+				Founded in 2025, our hospital has been a trusted name in healthcare, 
+				offering personalized treatment plans and world-class facilities. 
+				Your health is our mission.
+				</p>
+			</div>
+			</div>
+		</section>
+
+	<!-- Collapsible Sections -->
+		<div class="max-w-4xl mx-auto py-12 px-4 space-y-8">
+			<div class="text-center">
+				<a href={%  url 'my-bookings' %}>
+					<button  class=" bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-32 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
+						My Bookings
+					</button>
+				</a>
+			</div>
+			<!-- Services Section -->
+			<div class="text-center">
+			<button id="services-btn" class="section-btn bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-32 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
+				Our Services
+			</button>
+			<div id="services-content" class="section-content mt-8 bg-blue-50 rounded-xl p-6">
+				<h3 class="text-2xl font-bold text-blue-800 mb-4">Medical Services We Offer</h3>
+				<ul class="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
+				<li class="flex items-start">
+					<svg class="w-5 h-5 text-blue-600 mt-0.5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+					</svg>
+					<span>Emergency Care (24/7)</span>
+				</li>
+				<li class="flex items-start">
+					<svg class="w-5 h-5 text-blue-600 mt-0.5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+					</svg>
+					<span>Cardiology</span>
+				</li>
+				<li class="flex items-start">
+					<svg class="w-5 h-5 text-blue-600 mt-0.5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+					</svg>
+					<span>Pediatrics</span>
+				</li>
+				<li class="flex items-start">
+					<svg class="w-5 h-5 text-blue-600 mt-0.5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+					</svg>
+					<span>Neurology</span>
+				</li>
+				</ul>
+			</div>
+			</div>
+
+			<!-- Contact Section -->
+			<div class="text-center">
+			<button id="contact-btn" class="section-btn bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-32 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
+				Contact Us
+			</button>
+			<div id="contact-content" class="section-content mt-8 bg-blue-50 rounded-xl p-6">
+				<h3 class="text-2xl font-bold text-blue-800 mb-4">Get in Touch</h3>
+				<p class="mb-4">We're here to help you with all your healthcare needs.</p>
+				<div class="space-y-2 text-left">
+				<p><strong>Phone:</strong> (254) 790-669-459</p>
+				<p><strong>Email:</strong> info@medex.com</p>
+				<p><strong>Address:</strong> 123 Health St, MedCity, MC 12345</p>
+				</div>
+			</div>
+			</div>
+
+			<!-- Doctors Section -->
+			<div class="text-center">
+			<button id="doctors-btn" class="section-btn bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-32 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
+				Our Staff
+			</button>
+			<div id="doctors-content" class="section-content mt-8 bg-blue-50 rounded-xl p-6">
+				<h3 class="text-2xl font-bold text-blue-800 mb-6">Meet Our Specialists</h3>
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+				<a href="#">
+					<div class="bg-white p-4 rounded-lg shadow-md">
+						<div class="h-40 bg-blue-100 rounded-t-lg mb-4 flex items-center justify-center">
+						<span class="text-4xl">👨‍⚕️</span>
+						</div>
+						<h4 class="font-bold text-blue-700">Dr. Sarah Johnson</h4>
+						<p class="text-sm text-blue-600">Cardiologist</p>
+					</div>
+				</a>
+				</div>
+			</div>
+			</div>
+			{% if request.user|is_admin_or_staff or request.user.is_superuser %}
+			<div class="text-center">
+				<a href="{% url 'admin_dashboard' %}">
+				<button class="text-center section-btn bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-32 rounded-full text-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
+					Staff Dashboard
+				</button>
+				</a>
+			</div>
+			{% endif %}
+		</div>
+
+	<!-- Floating Action Button -->
+		{% if user.is_authenticated %}
+			<div class="fixed bottom-6 right-6 z-50">
+				<button id="floatingBookingBtn" class="bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 shadow-lg transition-transform transform hover:scale-110">
+					<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+					</svg>
+				</button>
+			</div>
+		{% endif %}
+		
+		<!-- Booking Modal (Hidden by Default) -->
+		<div id="bookingModal" class="fixed inset-0 z-50 hidden hero-gradient bg-opacity-50 flex items-center justify-center p-4">
+		<div class="bg-white rounded-lg shadow-xl w-full max-w-md">
+			<!-- Modal Header -->
+			<div class="flex justify-between items-center border-b p-4">
+			<h3 class="text-xl font-bold text-blue-800">Book a Clinic Visit</h3>
+			<button id="closeModal" class="text-gray-500 hover:text-gray-700">
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+				</svg>
+			</button>
+			</div>
+
+			<!-- Modal Form -->
+			<form class="p-6 space-y-4">
+				{% csrf_token %}
+				<div>
+					<label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
+					<input type="text" id="name" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border">
+				</div>
+
+				<div>
+					<label for="contact" class="block text-sm font-medium text-gray-700">Contact Number</label>
+					<input type="tel" id="contact" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border">
+				</div>
+
+				<div>
+					<label for="illness" class="block text-sm font-medium text-gray-700">Illness Details</label>
+					<textarea id="illness" rows="3" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"></textarea>
+				</div>
+
+				<div>
+					<label for="visitDateTime" class="block text-sm font-medium text-gray-700">Visit Date & Time</label>
+					<input type="datetime-local" id="visitDateTime" required 
+						class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border">
+					<p id="dateError" class="mt-1 text-sm text-red-600 hidden">Please select a future date and time</p>
+				</div>
+
+				<div class="flex justify-end space-x-3 pt-4">
+					<button type="button" id="cancelBooking" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400">
+						Cancel
+					</button>
+					<button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+						Book Appointment
+					</button>
+				</div>
+			</form>
+		</div>
+		</div>
+
+		<!-- jQuery for Section Toggles -->
+		<script src="{% static 'medEx_app/js/main.js' %}"></script>
+	</body>
+
+
+	<section id='footer'>
+		{% block footer %}
+
+			{% include './footer.html' %}
+
+		{% endblock %}
+	</section>
+</html>
