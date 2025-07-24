@@ -6,6 +6,7 @@ import json
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from datetime import datetime
+from django.utils.dateparse import parse_datetime
 
 
 
@@ -110,7 +111,7 @@ def my_bookings(request):
 @login_required
 def update_booking(request):
     try:
-        data = request.POST
+        data = request.POST  # Use request.POST instead of JSON for form data
         booking_id = data.get('booking_id')
         
         try:
@@ -123,10 +124,8 @@ def update_booking(request):
         booking.contact = data.get('contact', booking.contact)
         booking.illness_details = data.get('illness_details', booking.illness_details)
         
-        # Handle datetime conversion
         visit_date = data.get('visit_date')
         if visit_date:
-            from django.utils.dateparse import parse_datetime
             parsed_date = parse_datetime(visit_date)
             if parsed_date:
                 booking.visit_date = parsed_date
@@ -141,12 +140,11 @@ def update_booking(request):
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
-
 @require_POST
 @login_required
 def delete_booking(request):
     try:
-        data = json.loads(request.body)
+        data = request.POST  # Use request.POST instead of JSON
         booking_id = data.get('booking_id')
         
         try:

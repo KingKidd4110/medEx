@@ -47,8 +47,12 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {% for booking in bookings %}
                 <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow relative" data-booking-id="{{ booking.id }}">
-                    <!-- Delete Button (Top-right corner) -->
-                    
+                    <button class="delete-btn absolute bottom-3 right-3 bg-red-100 text-red-600 p-1 rounded-full hover:bg-red-200" 
+                            data-booking-id="{{ booking.id }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                    </button>
                     <div class="p-6">
                         <div class="flex justify-between items-start">
                             <h3 class="text-xl font-bold text-blue-700">{{ booking.user.username|default:booking.name }}</h3>
@@ -74,13 +78,6 @@
                             {% if booking.status == 'pending' %}
                                 <button class="edit-btn bg-blue-600 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-700" data-booking-id="{{ booking.id }}">Edit</button>
                             {% endif %}
-
-                            <button class="delete-btn absolute bottom-3 right-3 bg-red-100 text-red-600 p-1 rounded-full hover:bg-red-200" 
-                                    data-booking-id="{{ booking.id }}">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                </svg>
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -160,136 +157,9 @@
         {% endblock %}
     </section>
 
-    <script>
-        $(document).ready(function() {
-            // Modal elements
-            const $editModal = $('#editBookingModal');
-            const $deleteModal = $('#deleteModal');
-            const $bookingForm = $('#bookingForm');
-            
-            // Edit Booking Functionality
-            $('.edit-btn').on('click', function() {
-                const bookingId = $(this).data('booking-id');
-                const $card = $(this).closest('[data-booking-id]');
+    <script src="{% static 'medEx_app/js/edit-booking.js' %}">
 
-                // Fill form with current data
-                $('#bookingId').val(bookingId);
-                $('#editName').val($card.find('.booking-name').text().trim());
-                $('#editContact').val($card.find('.booking-contact').text().trim());
-                $('#editIllness').val($card.find('.booking-illness').text().trim());
-
-                // Format date for datetime-local input
-                const visitDateText = $card.find('.booking-date').text().trim();
-                const dateObj = new Date(visitDateText);
-                if (!isNaN(dateObj.getTime())) {
-                    const year = dateObj.getFullYear();
-                    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-                    const day = String(dateObj.getDate()).padStart(2, '0');
-                    const hours = String(dateObj.getHours()).padStart(2, '0');
-                    const minutes = String(dateObj.getMinutes()).padStart(2, '0');
-                    
-                    $('#editDate').val(`${year}-${month}-${day}T${hours}:${minutes}`);
-                }
-
-                // Show modal
-                $editModal.removeClass('hidden').addClass('active');
-            });
-
-            // Delete Booking Functionality
-            $('.delete-btn').on('click', function(e) {
-                e.stopPropagation();
-                const bookingId = $(this).data('booking-id');
-                $('#deleteBookingId').val(bookingId);
-                $deleteModal.removeClass('hidden').addClass('active');
-            });
-
-            // Close modals
-            function closeAllModals() {
-                $editModal.addClass('hidden').removeClass('active');
-                $deleteModal.addClass('hidden').removeClass('active');
-            }
-
-            $('#closeModal, #cancelEdit').on('click', closeAllModals);
-            $('#closeDeleteModal, #cancelDelete').on('click', closeAllModals);
-
-            // Close when clicking outside modal
-            $('.modal').on('click', function(e) {
-                if (e.target === this) {
-                    closeAllModals();
-                }
-            });
-
-            // Handle edit form submission
-            $bookingForm.on('submit', function(e) {
-                e.preventDefault();
-                
-                $.ajax({
-                    url: '/patient/bookings/update/',
-                    method: 'POST',
-                    data: $(this).serialize(),
-                    success: function(response) {
-                        if (response.status === 'success') {
-                            // Update the card with new data
-                            const bookingId = $('#bookingId').val();
-                            const $card = $(`[data-booking-id="${bookingId}"]`);
-
-                            $card.find('.booking-name').text($('#editName').val());
-                            $card.find('.booking-contact').text($('#editContact').val());
-                            $card.find('.booking-illness').text($('#editIllness').val());
-                            
-                            // Format date for display
-                            const dateObj = new Date($('#editDate').val());
-                            const formattedDate = dateObj.toLocaleString('en-US', {
-                                month: 'short',
-                                day: 'numeric',
-                                year: 'numeric',
-                                hour: '2-digit',
-                                minute: '2-digit'
-                            });
-                            $card.find('.booking-date').text(formattedDate);
-
-                            closeAllModals();
-                            alert('Booking updated successfully!');
-                        } else {
-                            alert('Error: ' + response.message);
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('AJAX Error:', status, error);
-                        alert('Network error. Please try again.');
-                    }
-                });
-            });
-
-            // Handle delete confirmation
-            $('#confirmDelete').on('click', function() {
-                const bookingId = $('#deleteBookingId').val();
-                
-                $.ajax({
-                    url: '/patient/bookings/delete/',
-                    method: 'POST',
-                    data: {
-                        booking_id: bookingId,
-                        csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
-                    },
-                    success: function(response) {
-                        if (response.status === 'success') {
-                            $(`[data-booking-id="${bookingId}"]`).fadeOut(300, function() {
-                                $(this).remove();
-                            });
-                            closeAllModals();
-                            alert('Booking deleted successfully!');
-                        } else {
-                            alert('Error: ' + response.message);
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('AJAX Error:', status, error);
-                        alert('Network error. Please try again.');
-                    }
-                });
-            });
-        });
+ 
     </script>
 </body>
 </html>

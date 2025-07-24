@@ -63,7 +63,7 @@
                                 </div>
                                 <p class="mt-1 text-gray-600"><strong>Patient Name:</strong> {{ booking.name }}</p>
                                 <p class="mt-2 text-gray-600"><strong>Contact:</strong> {{ booking.contact }}</p>
-                                <p class="mt-1 text-gray-600"><strong>Visit Date:</strong> {{ booking.visit_date }}</p>
+                                <p class="mt-1 text-gray-600"><strong>Visit Date:</strong> {{ booking.visit_date|date:"M d, Y H:i" }}</p>
                                 <div class="mt-4">
                                     <p class="text-gray-700"><strong>Illness:</strong></p>
                                     <p class="text-gray-600">{{ booking.illness_details }}</p>
