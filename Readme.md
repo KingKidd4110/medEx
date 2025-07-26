@@ -86,32 +86,32 @@ Welcome to **MedEx**, an open-source hospital management system designed to stre
 .Status Logic: A booking’s status changes to Expired if the visit_date passes without approval. Admins can approve or reject bookings (extendable feature).
 .Homepage Link: Add a "View My Bookings" button on your homepage with:
 
-```html
+   ```html
     <a href="{% url 'patient_bookings' %}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">View My Bookings</a>
 
 ## project-structure
 
-```bash
-medex/
-├── medex/              # Django project configuration
-│   ├── __init__.py
-│   ├── settings.py
-│   ├── urls.py
-│   └── wsgi.py
-├── medEx_app/          # Main app
-│   ├── migrations/
-│   ├── __init__.py
-│   ├── admin.py
-│   ├── apps.py
-│   ├── models.py       # Defines PatientBooking model
-│   ├── tests.py
-│   ├── urls.py         # Includes patient_bookings, update_booking, delete_booking
-│   ├── views.py        # Handles booking logic
-│   └── templates/      # HTML templates (e.g., patient_bookings.html)
-├── static/             # Static files (CSS, JS)
-├── manage.py
-├── requirements.txt    # Python dependencies
-└── README.md
+   ```bash
+   medex/
+   ├── medex/              # Django project configuration
+   │   ├── __init__.py
+   │   ├── settings.py
+   │   ├── urls.py
+   │   └── wsgi.py
+   ├── medEx_app/          # Main app
+   │   ├── migrations/
+   │   ├── __init__.py
+   │   ├── admin.py
+   │   ├── apps.py
+   │   ├── models.py       # Defines PatientBooking model
+   │   ├── tests.py
+   │   ├── urls.py         # Includes patient_bookings, update_booking, delete_booking
+   │   ├── views.py        # Handles booking logic
+   │   └── templates/      # HTML templates (e.g., patient_bookings.html)
+   ├── static/             # Static files (CSS, JS)
+   ├── manage.py
+   ├── requirements.txt    # Python dependencies
+   └── README.md
 
 ##Contributring
 
