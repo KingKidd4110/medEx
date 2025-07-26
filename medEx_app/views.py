@@ -126,9 +126,11 @@ def update_booking(request):
         
         visit_date = data.get('visit_date')
         if visit_date:
-            parsed_date = parse_datetime(visit_date)
-            if parsed_date:
-                booking.visit_date = parsed_date
+            try:
+                booking.visit_date = datetime.strptime(visit_date, "%Y-%m-%dT%H:%M")
+            except ValueError:
+                return JsonResponse({'status': 'error', 'message': 'Invalid date format'}, status=400)
+
         
         booking.save()
         return JsonResponse({
