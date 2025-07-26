@@ -88,6 +88,7 @@ Welcome to **MedEx**, an open-source hospital management system designed to stre
 
    ```html
     <a href="{% url 'patient_bookings' %}" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">View My Bookings</a>
+   ```
 
 ## project-structure
 
@@ -112,8 +113,9 @@ Welcome to **MedEx**, an open-source hospital management system designed to stre
    ├── manage.py
    ├── requirements.txt    # Python dependencies
    └── README.md
+   ```
 
-##Contributring
+## contributing
 
 We welcome contributions to enhance MedEx! To get started:Fork the repository.
     .Create a new branch: git checkout -b feature/your-feature.
@@ -121,8 +123,12 @@ We welcome contributions to enhance MedEx! To get started:Fork the repository.
     .Push to the branch: git push origin feature/your-feature.
     .Open a Pull Request with a detailed description of your changes.
 
-Please adhere to our code of conduct (CODE_OF_CONDUCT.md) and ensure tests pass before submitting.LicenseThis project is licensed under the MIT License. See the LICENSE file for details.ContactAuthor: [Ayienda Brian]  
-Email: ayiendabrian@gmail.com  
-GitHub: github.com/kingkidd4110  
-Issues: Report bugs or suggest features on the Issues page.
+## licence
 
+Please adhere to our code of conduct (CODE_OF_CONDUCT.md) and ensure tests pass before submitting.LicenseThis project is licensed under the MIT License. See the LICENSE file for details.ContactAuthor: [Ayienda Brian]
+
+## contact
+
+Email: <ayiendabrian@gmail.com>  
+GitHub: github.com/kingkidd4110
+Issues: Report bugs or suggest features on the Issues page.
