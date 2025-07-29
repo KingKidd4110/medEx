@@ -2,11 +2,13 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from .models import PatientBooking
+from accounts.models import *
 import json
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from datetime import datetime
 from django.utils.dateparse import parse_datetime
+from django.contrib.auth.models import User, Group
 
 
 
@@ -82,7 +84,12 @@ def book_appointment(request):
         status=405
     )
 def home(request):
-    return render(request, 'medEx_app/home.html')
+    admin_group = Group.objects.get(name='admins')
+    staff_group = Group.objects.get(name='staff')
+    
+    staffusers = User.objects.filter(groups__in=[admin_group, staff_group]).distinct()
+    context = {'staffusers' : staffusers}
+    return render(request, 'medEx_app/home.html', context)
 
 
 

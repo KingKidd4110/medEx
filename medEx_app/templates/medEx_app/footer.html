@@ -36,7 +36,7 @@
           <ul class="space-y-2">
             {% if request.user.is_authenticated %}
               <li><a href="{% url 'admin_dashboard' %}" class="text-blue-700 hover:text-blue-600 text-sm">Admin</a></li>
-              <li><a href="#doctors" class="text-blue-700 hover:text-blue-600 text-sm">Profile</a></li>
+              <li><a href="{% url 'profile' %}" class="text-blue-700 hover:text-blue-600 text-sm">Profile</a></li>
             {% endif %}
             <li><a href="#contact" class="text-blue-700 hover:text-blue-600 text-sm">FAQ</a></li>
           </ul>
